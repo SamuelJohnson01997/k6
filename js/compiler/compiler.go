@@ -229,3 +229,40 @@ func (b *babel) Transform(logger logrus.FieldLogger, src, filename string) (stri
 	}
 	return code, &srcMap, err
 }
+
+// CompilerPool is a pool of compilers so it can be used easier in parallel tests as they have their own babel.
+type CompilerPool struct {
+	c chan *Compiler
+}
+
+// NewCompilerPool creates a CompilerPool that will be using the provided logger and will preallocate (in parallel)
+// the count of compilers each with their own babel.
+func NewCompilerPool(logger logrus.FieldLogger, count int) *CompilerPool {
+	c := &CompilerPool{
+		c: make(chan *Compiler, count),
+	}
+	go func() {
+		for i := 0; i < count; i++ {
+			go func() {
+				co := New(logger)
+				err := co.InitializeBabel()
+				if err != nil {
+					panic(err)
+				}
+				c.Put(co)
+			}()
+		}
+	}()
+
+	return c
+}
+
+// Get a compiler from the pool.
+func (c *CompilerPool) Get() *Compiler {
+	return <-c.c
+}
+
+// Put a compiler back in the pool.
+func (c *CompilerPool) Put(co *Compiler) {
+	c.c <- co
+}
