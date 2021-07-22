@@ -96,8 +96,8 @@ func New(logger logrus.FieldLogger) *Compiler {
 	return &Compiler{logger: logger}
 }
 
-// InitializeBabel specifically initializes a separate (non-global) instance of babel for this compiler specifically
-// the returned error is only if babel couldn't be parsed/run which should never be possible
+// InitializeBabel initializes a separate (non-global) instance of babel specifically for this Compiler.
+// An error is returned only if babel itself couldn't be parsed/run which should never be possible.
 func (c *Compiler) InitializeBabel() error {
 	var err error
 	if c.babel == nil {
