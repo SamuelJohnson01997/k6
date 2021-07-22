@@ -114,9 +114,11 @@ func (c *Compiler) Transform(src, filename string) (code string, srcmap *SourceM
 		})
 		c.babel = globalBabel
 	}
+	if err != nil {
+		return
+	}
 
 	code, srcmap, err = c.babel.Transform(c.logger, src, filename)
-
 	return
 }
 
