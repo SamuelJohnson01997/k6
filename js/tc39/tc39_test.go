@@ -520,10 +520,16 @@ outer:
 			continue
 		}
 		newName := path.Join(name, file.Name())
+		if strings.Index(newName, "async") != -1 {
+			ctx.t.Run(newName, func(t *testing.T) {
+				t.Skipf("Skip %s because async is not supported", newName)
+			})
+			continue outer
+		}
 		for _, path := range pathBasedBlock { // TODO: use trie / binary search?
 			if strings.HasPrefix(newName, path) {
 				ctx.t.Run(newName, func(t *testing.T) {
-					t.Skipf("Skip %s beause of path based block", newName)
+					t.Skipf("Skip %s because of path based block", newName)
 				})
 				continue outer
 			}
