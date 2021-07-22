@@ -520,7 +520,7 @@ outer:
 			continue
 		}
 		newName := path.Join(name, file.Name())
-		if strings.Index(newName, "async") != -1 {
+		if strings.Contains(newName, "async") {
 			ctx.t.Run(newName, func(t *testing.T) {
 				t.Skipf("Skip %s because async is not supported", newName)
 			})
