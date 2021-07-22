@@ -232,15 +232,15 @@ func (b *babel) Transform(logger logrus.FieldLogger, src, filename string) (stri
 	return code, &srcMap, err
 }
 
-// CompilerPool is a pool of compilers so it can be used easier in parallel tests as they have their own babel.
-type CompilerPool struct {
+// Pool is a pool of compilers so it can be used easier in parallel tests as they have their own babel.
+type Pool struct {
 	c chan *Compiler
 }
 
-// NewCompilerPool creates a CompilerPool that will be using the provided logger and will preallocate (in parallel)
+// NewPool creates a Pool that will be using the provided logger and will preallocate (in parallel)
 // the count of compilers each with their own babel.
-func NewCompilerPool(logger logrus.FieldLogger, count int) *CompilerPool {
-	c := &CompilerPool{
+func NewPool(logger logrus.FieldLogger, count int) *Pool {
+	c := &Pool{
 		c: make(chan *Compiler, count),
 	}
 	go func() {
@@ -260,11 +260,11 @@ func NewCompilerPool(logger logrus.FieldLogger, count int) *CompilerPool {
 }
 
 // Get a compiler from the pool.
-func (c *CompilerPool) Get() *Compiler {
+func (c *Pool) Get() *Compiler {
 	return <-c.c
 }
 
 // Put a compiler back in the pool.
-func (c *CompilerPool) Put(co *Compiler) {
+func (c *Pool) Put(co *Compiler) {
 	c.c <- co
 }

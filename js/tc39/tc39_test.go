@@ -129,7 +129,7 @@ type tc39BenchmarkItem struct {
 type tc39BenchmarkData []tc39BenchmarkItem
 
 type tc39TestCtx struct {
-	compilerPool   *compiler.CompilerPool
+	compilerPool   *compiler.Pool
 	base           string
 	t              *testing.T
 	prgCache       map[string]*goja.Program
@@ -549,7 +549,7 @@ func TestTC39(t *testing.T) {
 
 	ctx := &tc39TestCtx{
 		base:         tc39BASE,
-		compilerPool: compiler.NewCompilerPool(testutils.NewLogger(t), runtime.GOMAXPROCS(0)),
+		compilerPool: compiler.NewPool(testutils.NewLogger(t), runtime.GOMAXPROCS(0)),
 	}
 	ctx.init()
 	// ctx.enableBench = true
