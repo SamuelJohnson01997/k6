@@ -172,7 +172,7 @@ func newBabel() (*babel, error) {
 	var err error
 
 	onceBabelCode.Do(func() {
-		globalBabelCode, err = goja.Compile("<eval>", babelSrc, false)
+		globalBabelCode, err = goja.Compile("<internal/k6/compiler/lib/babel.min.js>", babelSrc, false)
 		if err != nil { // TODO cache this?
 			return
 		}
